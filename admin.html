@@ -124,7 +124,7 @@
       <tbody id="appointmentsList"></tbody>
     </table>
 
-    <script>
+       <script>
       // Retrieve and display appointments from localStorage
       const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
       const appointmentsList = document.getElementById('appointmentsList');
@@ -133,8 +133,9 @@
         // Clear the current content of the table
         appointmentsList.innerHTML = '';
 
-        // Display appointments in the table
-        appointments.forEach(appointment => {
+        // Display only approved appointments in the table
+        const approvedAppointments = appointments.filter(appointment => appointment.isApproved);
+        approvedAppointments.forEach(appointment => {
           const row = document.createElement('tr');
           row.innerHTML = `
             <td>${appointment.patientName}</td>
@@ -151,7 +152,7 @@
         alert('Logout clicked. Implement your logout logic here.');
       }
 
-      // Initial display of appointments
+      // Initial display of approved appointments
       displayAppointments();
     </script>
   </div>
