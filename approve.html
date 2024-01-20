@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Lato", sans-serif;
+    }
+
+    .sidebar {
+      margin: 0;
+      padding: 0;
+      width: 200px;
+      background-color: #f1f1f1;
+      position: fixed;
+      height: 100%;
+      overflow: auto;
+    }
+
+    .sidebar a {
+      display: block;
+      color: black;
+      padding: 16px;
+      text-decoration: none;
+    }
+
+    .sidebar a.active {
+      background-color: #04AA6D;
+      color: white;
+    }
+
+    .sidebar a:hover:not(.active) {
+      background-color: #555;
+      color: white;
+    }
+
+    div.content {
+      margin-left: 200px;
+      padding: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #04AA6D;
+      color: white;
+    }
+
+    .header-bar {
+      justify-content: space-between;
+      display: flex;
+      background-color: #319399;
+      color: white;
+      height: 50px;
+      align-items: center;
+      padding: 0 10px;
+      margin-bottom: 20px;
+    }
+
+    .header-bar div {
+      cursor: pointer;
+    }
+
+    @media screen and (max-width: 700px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+
+      .sidebar a {
+        float: left;
+      }
+
+      div.content {
+        margin-left: 0;
+      }
+    }
+
+    @media screen and (max-width: 400px) {
+      .sidebar a {
+        text-align: center;
+        float: none;
+      }
+    }
+  </style>
+  <title>Appointment Approval</title>
+</head>
+
+<body>
+
+  <div class="sidebar">
+    <a href="appointment.html">Dashboard</a>
+    <a href="admin.html">View Appointments</a>
+    <a href="approve.html">Approval Appointments</a>
+  </div>
+
+  <div class="content">
+    <div class="header-bar">
+      <div>HOSPITAL MANAGEMENT</div>
+      <div onclick="logout()">Logout</div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Patient Name</th>
+          <th>Symptom</th>
+          <th>Phone</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="appointmentsList"></tbody>
+    </table>
+
+    <script>
+      // Retrieve and display appointments from localStorage
+      const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+      const appointmentsList = document.getElementById('appointmentsList');
+
+      function displayAppointments() {
+        // Clear the current content of the table
+        appointmentsList.innerHTML = '';
+
+        // Display appointments in the table
+        appointments.forEach((appointment, index) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${appointment.patientName}</td>
+            <td>${appointment.symptom}</td>
+            <td>${appointment.phone}</td>
+            <td>${appointment.date}</td>
+            <td>
+              <button onclick="handleApproval(${index}, true)">Accept</button>
+              <button onclick="handleApproval(${index}, false)">Reject</button>
+            </td>
+          `;
+          appointmentsList.appendChild(row);
+        });
+      }
+
+      function handleApproval(index, isApproved) {
+        // Update the approval status of the appointment
+        appointments[index].isApproved = isApproved;
+
+        // Save the updated data to localStorage
+        localStorage.setItem('appointments', JSON.stringify(appointments));
+
+        // Remove the corresponding row from the table
+        const rowToRemove = appointmentsList.childNodes[index];
+        appointmentsList.removeChild(rowToRemove);
+      }
+
+      function logout() {
+        // Perform logout actions here
+        alert('Logout clicked. Implement your logout logic here.');
+      }
+
+      // Initial display of appointments
+      displayAppointments();
+    </script>
+  </div>
+
+</body>
+
+</html>
